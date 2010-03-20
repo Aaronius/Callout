@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" viewSourceURL="srcview/index.html" xmlns:local="*">
+	<mx:Script>
+		<![CDATA[
+			import mx.containers.VBox;
+			import mx.controls.Image;
+			import com.aaronhardy.callout.Callout;
+			import mx.controls.Label;
+			
+			[Embed(source="assets/phoenix.jpg")]
+			private var Pheonix:Class;
+			
+			private function showPlainTextCallout(event:MouseEvent):void
+			{
+				var callout:Callout = new Callout()
+				var contentLabel:Label = new Label();
+				contentLabel.text = "Plain text content.";
+				callout.content = contentLabel;
+				callout.show(DisplayObjectContainer(event.target));
+			}
+			
+			private function showImageCallout(event:MouseEvent):void
+			{
+				var callout:Callout = new Callout();
+				var contentBox:VBox = new VBox();
+				contentBox.setStyle("horizontalAlign", "center");
+				var contentImage:Image = new Image();
+				contentImage.source = Pheonix;
+				var contentLabel:Label = new Label();
+				contentLabel.text = "Callout with image and red text.";
+				contentLabel.setStyle("color", 0xff0000);
+				contentBox.addChild(contentImage);
+				contentBox.addChild(contentLabel);
+				callout.content = contentBox;
+				callout.show(DisplayObjectContainer(event.target));
+			}
+			
+			private function showCoordinateCallout(event:MouseEvent):void
+			{
+				var callout:Callout = new Callout()
+				var contentLabel:Label = new Label();
+				contentLabel.text = "Point-anchored callout with 35 pixels padding and a tail on the bottom.";
+				callout.content = contentLabel;
+				callout.anchorPoint = new Point(500, 500);
+				callout.setStyle("preferredTailPosition", "bottom");
+				callout.setStyle("paddingTop", 35);
+				callout.setStyle("paddingRight", 35);
+				callout.setStyle("paddingBottom", 35);
+				callout.setStyle("paddingLeft", 35);
+				callout.show(DisplayObjectContainer(event.target));
+			}
+			
+			private function showOrangeTransparentCallout(event:MouseEvent):void
+			{
+				var callout:Callout = new Callout()
+				var contentLabel:Label = new Label();
+				contentLabel.text = "Orange transparent callout with large tail.";
+				callout.content = contentLabel;
+				callout.setStyle("backgroundColor", 0xffe96c);
+				callout.setStyle("backgroundAlpha", .5);
+				callout.setStyle("tailSize", 60);
+				callout.setStyle("tailOffset", 10);
+				callout.setStyle("paddingTop", 35);
+				callout.setStyle("paddingRight", 35);
+				callout.setStyle("paddingBottom", 35);
+				callout.setStyle("paddingLeft", 35);
+				callout.show(DisplayObjectContainer(event.target));
+			}
+		]]>
+	</mx:Script>
+	<mx:Button label="Show Plain Text Callout" top="50" left="50" click="showPlainTextCallout(event);"/>
+	<mx:Button label="Show Image Callout" top="50" right="50" click="showImageCallout(event);"/>
+	<mx:Button label="Show Coordinate Anchor Callout" bottom="50" left="50" click="showCoordinateCallout(event);"/>
+	<mx:Button label="Show Orange w/ Transparent Callout" bottom="50" right="50" click="showOrangeTransparentCallout(event);"/>
+</mx:Application>
