@@ -216,6 +216,35 @@ package com.aaronhardy.callout
 			return true;
 		}
 		
+//      Replace above classConstruct() with this one for use in Flex 4:
+//		private static function classConstruct():Boolean {
+//			var styleDeclaration:CSSStyleDeclaration = 
+//				FlexGlobals.topLevelApplication.styleManager.getStyleDeclaration(
+//					'com.aaronhardy.callout.Callout');
+//			
+//			if (!styleDeclaration) {
+//				styleDeclaration = new CSSStyleDeclaration();
+//			}
+//			
+//			styleDeclaration.defaultFactory = function():void {
+//				this.tailOffset = 0;
+//				this.tailSize = 30;
+//				this.paddingTop = 10;
+//				this.paddingRight = 10;
+//				this.paddingBottom = 10;
+//				this.paddingLeft = 10;
+//				this.preferredTailPosition = TAIL_POSITION_BOTTOM_LEFT;
+//				this.forcePreferredTailPosition = false;
+//				this.backgroundColor = 0xFFFFFF;
+//				this.backgroundAlpha = 1;
+//			}
+//			
+//			FlexGlobals.topLevelApplication.styleManager.setStyleDeclaration(
+//				"com.aaronhardy.callout.Callout", styleDeclaration, false);
+//			
+//			return true;
+//		}
+		
 		// Properties and styles
 		//////////////////////////////
 		
@@ -433,6 +462,21 @@ package com.aaronhardy.callout
 		
 		/**
 		 * @protected
+		 * When the content changes size, it will invalidate the size of
+		 * this component.  We'll set the contentChanged flag and re-evaluate
+		 * positioning.
+		 */
+		override public function invalidateSize():void
+		{
+			super.invalidateSize();
+			
+			contentChanged = true;
+			invalidateProperties();
+			invalidateDisplayList();
+		}
+		
+		/**
+		 * @protected
 		 * Adds elements to the display list.  Evaluates tail positions to
 		 * determine which would support displaying the callout within the 
 		 * screen's viewable area.
@@ -462,9 +506,10 @@ package com.aaronhardy.callout
 				var deprioritizedPositions:Array = tailPositionOrder.splice(0, tailPositionOrder.indexOf(getStyle('preferredTailPosition')));
 				tailPositionOrder = tailPositionOrder.concat(deprioritizedPositions);
 				
-				// Reset the actual tail position. We will use this variable to detect
-				// if a valid tail position has been found.
+				// Reset the "actual" values. We will use these variables to detect
+				// if a valid tail position/point has been found.
 				actualTailPosition = null;
+				actualAnchorPoint = null;
 				
 				// The content size is used in the tail position evaluation process to see
 				// if the callout will fit in the screen's viewable area.  However, the content's
@@ -596,12 +641,12 @@ package com.aaronhardy.callout
 				
 				// If no adequate tail position was found, set them to defaults.
 				if (!actualTailPosition && !actualAnchorPoint) {
-					actualTailPosition = TAIL_POSITION_BOTTOM_LEFT;
+					actualTailPosition = tailPositionOrder[0];
 					
-					if (owner) {
-						actualAnchorPoint = getAnchorPointByTailPosition(TAIL_POSITION_BOTTOM_LEFT);
-					} else {
+					if (anchorPoint) {
 						actualAnchorPoint = _anchorPoint;
+					} else {
+						actualAnchorPoint = getAnchorPointByTailPosition(actualTailPosition);
 					}
 				}
 				
