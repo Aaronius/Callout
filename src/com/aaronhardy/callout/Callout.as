@@ -1,4 +1,4 @@
-// Copyright (c) 2009 Aaron Hardy
+// Copyright (c) 2010 Aaron Hardy
 //
 // Permission is hereby granted, free of charge, to any person
 // obtaining a copy of this software and associated documentation
@@ -458,21 +458,6 @@ package com.aaronhardy.callout
 			}
 			
 			return newSkin;
-		}
-		
-		/**
-		 * @protected
-		 * When the content changes size, it will invalidate the size of
-		 * this component.  We'll set the contentChanged flag and re-evaluate
-		 * positioning.
-		 */
-		override public function invalidateSize():void
-		{
-			super.invalidateSize();
-			
-			contentChanged = true;
-			invalidateProperties();
-			invalidateDisplayList();
 		}
 		
 		/**
